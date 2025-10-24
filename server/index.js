@@ -13,7 +13,7 @@ const allowedOrigins = [
   "http://localhost:5000",          // local server
   "http://127.0.0.1:5500",          // VSCode Live Server
   "http://localhost:5500",          // alternate
-  "https://yourproject.vercel.app"  // replace with your real Vercel URL
+  "https://collabhub-in.vercel.app/"  // replace with your real Vercel URL
 ];
 
 app.use(
