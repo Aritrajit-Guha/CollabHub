@@ -10,7 +10,7 @@ let codeId = null;
 const socketServerURL =
   window.location.hostname === "localhost"
     ? "http://localhost:5000"
-    : "https://your-render-backend.onrender.com"; // change to your actual Render backend URL
+    : "https://collabhub-ghf4.onrender.com"; // change to your actual Render backend URL
 
 // Connect to Socket.IO server
 const socket = io(socketServerURL, {
