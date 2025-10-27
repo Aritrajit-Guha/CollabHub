@@ -4,7 +4,7 @@
 const API_BASE =
   window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
     ? "http://localhost:5000" // Local backend
-    : "https://collabhub-in.vercel.app"; // Deployed backend URL
+    : "https://collabhub-13ad.onrender.com"; // Deployed backend URL
 
 // ======================
 // DOM Elements
