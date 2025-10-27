@@ -14,20 +14,20 @@ connectDB();
 const cron = require("node-cron");
 const File = require("./models/File");
 
-// Allow both local and deployed frontends
+// ✅ Define allowed origins once
 const allowedOrigins = [
-  "http://localhost:5000",          // local server
-  "http://127.0.0.1:5500",          // VSCode Live Server
-  "http://localhost:5500",          // alternate
-  "https://collabhub-in.vercel.app/"  // replace with your real Vercel URL
+  "http://localhost:5000",
+  "http://127.0.0.1:5500",
+  "http://localhost:5500",
+  "https://collabhub-in.vercel.app", // ✅ no trailing slash
 ];
 
-app.use(
-  cors({
-    origin: allowedOrigins,
-    methods: ["GET", "POST"],
-  })
-);
+// ✅ Use only one CORS middleware
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ["GET", "POST"],
+  credentials: true,
+}));
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "../public")));
@@ -39,6 +39,7 @@ app.get("/", (req, res) => {
 // In-memory code store
 let codeSnippets = {};
 
+// ✅ Socket.io CORS setup using same origins
 const io = new Server(server, {
   cors: {
     origin: allowedOrigins,
@@ -70,6 +71,7 @@ io.on("connection", (socket) => {
 const fileRoutes = require("./routes/fileshareRoutes");
 app.use("/api/fileshare", fileRoutes);
 
+// 🧹 Delete expired files hourly
 cron.schedule("0 * * * *", async () => {
   await File.deleteMany({ expiresAt: { $lt: new Date() } });
   console.log("🧹 Old files cleaned");
