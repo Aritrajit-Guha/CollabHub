@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Code Sharing</title>
+  <link rel="stylesheet" href="../assets/css/codeshare.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Code Sharing (Real-time)</h1>
+
+    <!-- Mode selection -->
+    <div id="modeSelection">
+      <button id="shareModeBtn">Share Code</button>
+      <button id="receiveModeBtn">Receive Code</button>
+    </div>
+
+    <!-- Display generated or input Code ID -->
+    <div style="margin-top:10px;">
+      Code ID: <span id="generatedCodeId">---</span>
+    </div>
+
+    <!-- Code box -->
+    <textarea id="codeInput" rows="20" placeholder="Paste or receive code here..."></textarea>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="../assets/js/codeshare.js"></script>
+</body>
+</html>
