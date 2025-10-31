@@ -1,5 +1,10 @@
 // whiteboard.js
-const socket = io();
+const socket = io(
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : "https://collabhub-13ad.onrender.com"
+);
+
 
 // Canvas setup
 const canvas = document.getElementById("whiteboard");
