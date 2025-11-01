@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CollabHub Group Chat</title>
+  <link rel="stylesheet" href="../assets/css/chatbot.css" />
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+</head>
+<body>
+  <div id="chatContainer">
+    <!-- Header -->
+    <header id="chatHeader">
+      <h1>💬 CollabHub Group Chat</h1>
+      <div id="roomJoin">
+        <input id="roomInput" type="text" placeholder="Enter room code..." />
+        <button id="joinBtn">Join Room</button>
+      </div>
+    </header>
+
+    <!-- Chat Messages -->
+    <main id="chatBox"></main>
+
+    <!-- Input Bar -->
+    <footer id="chatControls">
+      <input id="userInput" type="text" placeholder="Type your message..." />
+      <button id="sendBtn">Send</button>
+    </footer>
+  </div>
+
+  <script src="../assets/js/chatbot.js"></script>
+</body>
+</html>

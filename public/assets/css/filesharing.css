@@ -1,0 +1,126 @@
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #141e30, #243b55);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  width: 90%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.heading {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.card {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.3);
+}
+
+.card h2 {
+  margin-bottom: 0.5rem;
+  color: #00bcd4;
+}
+
+.card p {
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  color: #ddd;
+}
+
+.btn {
+  background: #00bcd4;
+  color: #fff;
+  border: none;
+  outline: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 1rem;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background: #00acc1;
+}
+
+.btn.upload {
+  background: #4caf50;
+}
+
+.btn.upload:hover {
+  background: #43a047;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+#fileList {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #eee;
+}
+
+#fileList span {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 5px 10px;
+  border-radius: 8px;
+  margin: 5px;
+}
+
+#uploadStatus {
+  margin-top: 1rem;
+  color: #8bc34a;
+}
+
+#fileLinks {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+#fileLinks a {
+  display: block;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 5px 0;
+  padding: 8px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #03a9f4;
+  transition: 0.3s;
+}
+
+#fileLinks a:hover {
+  background: rgba(255, 255, 255, 0.25);
+}

@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File Sharing | CollabHub</title>
+  <link rel="stylesheet" href="../assets/css/filesharing.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <div class="container">
+    <h1 class="heading"><i class="fa-solid fa-share-nodes"></i> File Sharing</h1>
+
+    <div class="card upload-card">
+      <h2><i class="fa-solid fa-upload"></i> Send Files</h2>
+      <p>Select and upload your files. A unique code will be generated to share.</p>
+
+      <input type="file" id="fileInput" multiple hidden />
+      <button class="btn" id="chooseFiles"><i class="fa-solid fa-folder-open"></i> Choose Files</button>
+      <div id="fileList"></div>
+      <button class="btn upload" id="uploadBtn"><i class="fa-solid fa-cloud-arrow-up"></i> Upload</button>
+      <div id="uploadStatus"></div>
+    </div>
+
+    <div class="card download-card">
+      <h2><i class="fa-solid fa-download"></i> Receive Files</h2>
+      <p>Enter the share code to access the uploaded files.</p>
+
+      <input type="text" id="shareCodeInput" placeholder="Enter Share Code" />
+      <button class="btn" id="fetchBtn"><i class="fa-solid fa-magnifying-glass"></i> Fetch Files</button>
+      <div id="fileLinks"></div>
+    </div>
+  </div>
+
+  <script src="../assets/js/filesharing.js"></script>
+</body>
+</html>
