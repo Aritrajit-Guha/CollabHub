@@ -1,0 +1,176 @@
+/* General Layout */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: #0e0e0e;
+  color: #f0f0f0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Main Container */
+#chatContainer {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #141414;
+}
+
+/* Header Section */
+#chatHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1f1f1f;
+  padding: 15px 20px;
+  border-bottom: 1px solid #333;
+}
+
+#chatHeader h1 {
+  font-size: 1.4rem;
+  margin: 0;
+  color: #00bfff;
+}
+
+#roomJoin {
+  display: flex;
+  gap: 10px;
+}
+
+#roomInput {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: none;
+  width: 200px;
+}
+
+#joinBtn {
+  background: #007bff;
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+#joinBtn:hover {
+  background: #0056b3;
+}
+
+/* Chat Box (Main Area) */
+#chatBox {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  background: #1a1a1a;
+  border-radius: 0;
+  scroll-behavior: smooth;
+}
+
+#chatBox p {
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+/* Chat Message Styles */
+.user-msg {
+  color: #00bfff;
+}
+
+.other-msg {
+  color: #9aff9a;
+}
+
+.ai-msg {
+  color: #ffcc00;
+}
+
+.system-msg {
+  color: #bbb;
+  font-style: italic;
+  text-align: center;
+}
+
+.error-msg {
+  color: #ff5555;
+  font-weight: bold;
+}
+
+/* Input Bar */
+#chatControls {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-top: 1px solid #333;
+  background: #1f1f1f;
+  gap: 10px;
+}
+
+#userInput {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background: #2a2a2a;
+  color: white;
+}
+
+#userInput::placeholder {
+  color: #999;
+}
+
+#sendBtn {
+  background: #00bfff;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+#sendBtn:hover {
+  background: #0099e6;
+}
+
+/* Scrollbar Styling */
+#chatBox::-webkit-scrollbar {
+  width: 8px;
+}
+#chatBox::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 4px;
+}
+#chatBox::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  #chatHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  #roomInput {
+    width: 100%;
+  }
+
+  #chatControls {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  #sendBtn {
+    width: 100%;
+  }
+}

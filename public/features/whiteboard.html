@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CollabHub Whiteboard</title>
+  <link rel="stylesheet" href="../assets/css/whiteboard.css">
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+</head>
+<body>
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <label>🎨 Color:</label>
+      <input type="color" id="colorPicker" value="#000000">
+
+      <label>🖋 Thickness:</label>
+      <input type="range" id="thickness" min="1" max="20" value="3">
+
+      <button id="eraseBtn">Eraser</button>
+      <button id="clearBtn">Clear</button>
+      <button id="downloadBtn">Download</button>
+    </div>
+
+    <div class="toolbar-right">
+      <input type="text" id="boardId" placeholder="Enter or share code">
+      <button id="shareBtn">Share</button>
+      <button id="joinBtn">Join</button>
+    </div>
+  </div>
+
+  <canvas id="whiteboard"></canvas>
+
+  <script src="../assets/js/whiteboard.js"></script>
+</body>
+</html>

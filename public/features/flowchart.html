@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CollabHub Flowchart</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../assets/css/flowchart.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="brand">
+            <i class="fa-solid fa-shapes"></i> CollabDraw
+        </div>
+        <div class="room-controls">
+            <input type="text" id="roomInput" value="flowchart123" placeholder="Room ID">
+            <button id="joinBtn" class="btn-primary">Join Room</button>
+            
+            <button id="download-btn" class="btn-secondary">
+                <i class="fa-solid fa-download"></i> Download
+            </button>
+        </div>
+    </header>
+
+    <div class="ribbon">
+        <div class="tool-group">
+            <button id="mode-select" class="tool-btn active" title="Select/Move Tool"><i class="fa-solid fa-arrow-pointer"></i> Select</button>
+            <button id="mode-connect" class="tool-btn" title="Connector Tool"><i class="fa-solid fa-share-nodes"></i> Connect</button>
+            <button id="delete-btn" class="tool-btn text-red" title="Delete Selected"><i class="fa-solid fa-trash"></i></button>
+        </div>
+        <div class="separator"></div>
+        <div class="tool-group" id="properties-panel" style="opacity: 0.5; pointer-events: none;">
+            <div class="prop-item">
+                <label>Fill</label>
+                <input type="color" id="color-picker" value="#aaddff">
+            </div>
+            <div class="prop-item">
+                <label>Text</label>
+                <input type="text" id="text-input" placeholder="Label...">
+            </div>
+            <div class="prop-item">
+                <label>Font</label>
+                <select id="font-family-picker">
+                    <option value="Inter">Inter</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Times New Roman">Times</option>
+                </select>
+            </div>
+            <div class="prop-item">
+                <label>Size</label>
+                <input type="number" id="font-size-picker" value="14" min="8" max="72" style="width: 45px;">
+            </div>
+            <div class="prop-item">
+                <label>Color</label>
+                <input type="color" id="font-color-picker" value="#333333">
+            </div>
+        </div>
+        
+        <div class="tool-group" style="margin-left: auto;">
+            <button id="expand-btn" class="tool-btn" title="Expand Canvas">
+                <i class="fa-solid fa-expand"></i> Expand
+            </button>
+        </div>
+    </div>
+
+    <div class="workspace">
+        
+        <div class="sidebar">
+            <div class="sidebar-title">Shapes</div>
+            <div class="shape-item" draggable="true" data-shape="rectangle"><div class="icon-box rect"></div><span>Process</span></div>
+            <div class="shape-item" draggable="true" data-shape="diamond"><div class="icon-box diamond"></div><span>Decision</span></div>
+            <div class="shape-item" draggable="true" data-shape="oval"><div class="icon-box oval"></div><span>Start/End</span></div>
+            <div class="shape-item" draggable="true" data-shape="parallelogram"><div class="icon-box para"></div><span>Input</span></div>
+        </div>
+
+        <div class="canvas-wrapper">
+            <canvas id="flowchart-canvas" width="1200" height="800"></canvas>
+            <textarea id="node-text-editor"></textarea>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="../assets/js/flowchart.js"></script>
+</body>
+</html>
