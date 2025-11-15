@@ -1,9 +1,18 @@
-// public/flowchart.js (V5 - Synchronized Canvas)
+// public/flowchart.js (V5 - Synchronized & Deployed)
 
 // --- 1. SETUP & STATE ---
-const socket = io();
+
+// ✅ FIX: Define your server's address
+// This tells Socket.IO where to connect, which is required for Render
+const API_BASE =
+  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? "http://localhost:5000" // Your local backend
+    : "https://collabhub-13ad.onrender.com"; // Your deployed Render backend URL
+
+const socket = io(API_BASE); // ✅ Pass the URL to io()
+
 const canvas = document.getElementById("flowchart-canvas");
-const ctx = canvas.getContext("2d"); // This is the main context
+const ctx = canvas.getContext("2d");
 const canvasWrapper = document.querySelector(".canvas-wrapper");
 
 // UI Elements
@@ -97,21 +106,14 @@ function setMode(newMode) {
 }
 setMode("select");
 
-
 // ✅ NEW: Helper function to set canvas size
 function setCanvasSize(newWidth, newHeight) {
-    // 1. Update the bitmap size (attribute)
     canvas.width = newWidth;
     canvas.height = newHeight;
-
-    // 2. Update the CSS size (style)
     canvas.style.width = `${newWidth}px`;
     canvas.style.height = `${newHeight}px`;
-    
-    // 3. Redraw
     draw();
 }
-
 
 // --- 4. DRAWING ---
 function draw() {
@@ -520,15 +522,23 @@ btnDownload.addEventListener("click", () => {
     document.body.removeChild(link);
 });
 
-// ✅ MODIFIED: This is the old, incorrect expand function
+// ✅ MODIFIED: This is the new, correct expand function
 btnExpand.addEventListener("click", () => {
+    // 1. Get the new dimensions
     const newWidth = canvas.width + 400;
     const newHeight = canvas.height + 400;
-    canvas.width = newWidth;
-    canvas.height = newHeight;
-    canvas.style.width = `${newWidth}px`;
-    canvas.style.height = `${newHeight}px`;
-    draw();
+
+    // 2. Apply locally *immediately*
+    setCanvasSize(newWidth, newHeight);
+    
+    // 3. Tell the server to broadcast this
+    socket.emit("expandCanvas", {
+        roomId: currentRoom,
+        newWidth: newWidth,
+        newHeight: newHeight
+    });
+    
+    // 4. Scroll to the new bottom-right
     canvasWrapper.scrollTop = canvas.height;
     canvasWrapper.scrollLeft = canvas.width;
 });
@@ -555,7 +565,14 @@ canvas.addEventListener("drop", (e) => {
 });
 
 // Socket Listeners
-socket.on("flowchartUpdate", (state) => { flowchartState = state; draw(); });
+// ✅ MODIFIED: On join, set canvas to the saved size
+socket.on("flowchartUpdate", (state) => { 
+    flowchartState = state; 
+    // Set canvas to the size stored on the server
+    setCanvasSize(state.width || 1200, state.height || 800);
+    // draw() is called inside setCanvasSize()
+});
+
 socket.on("newNode", (node) => { flowchartState.nodes.push(node); draw(); });
 socket.on("newConnector", (conn) => { 
     if (!flowchartState.connectors.find(c => c.id === conn.id)) {
@@ -569,6 +586,13 @@ socket.on("connectorUpdated", (data) => {
     const c = flowchartState.connectors.find(x => x.id === data.connectorId);
     if(c) { Object.assign(c, data.updates); draw(); }
 });
+
+// ✅ NEW: Listen for other users expanding the canvas
+socket.on("canvasExpanded", (data) => {
+    console.log("Canvas expanded by another user");
+    setCanvasSize(data.newWidth, data.newHeight);
+});
+
 socket.on("connectorDeleted", (data) => {
     flowchartState.connectors = flowchartState.connectors.filter(c => c.id !== data.connectorId);
     if (selectedConnector && selectedConnector.id === data.connectorId) {
