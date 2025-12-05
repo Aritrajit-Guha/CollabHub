@@ -1,18 +1,26 @@
-/* public/flowchart.css (V2 - Modern & Modular) */
+/* public/flowchart.css (V4 - High-Tech Lab Theme) */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Inter:wght@300;400;600&display=swap');
+
 :root {
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --primary: #007aff;
-    --primary-light: #e6f2ff;
-    --primary-border: #b3d7ff;
-    --bg-page: #f8f9fa;
-    --bg-canvas: #ffffff;
-    --bg-panel: #ffffff;
-    --bg-hover: #f1f3f5;
-    --border-color: #dee2e6;
-    --text-primary: #212529;
-    --text-secondary: #6c757d;
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    /* --- DARK UI VARIABLES (Sidebar/Header) --- */
+    --font-ui: 'Inter', sans-serif;
+    --font-tech: 'Rajdhani', sans-serif;
+    
+    --neon-cyan: #00f3ff;
+    --neon-blue: #0066ff;
+    --bg-void: #0b0d12;      /* Dark background for UI */
+    --bg-panel: rgba(15, 20, 30, 0.95);
+    
+    --border-glass: rgba(0, 243, 255, 0.2);
+    --text-primary: #e0e6ed;
+    --text-muted: #8b9bb4;
+
+    /* --- LIGHT METALLIC VARIABLES (Workspace) --- */
+    --metal-bg: #eef2f6;     /* Light silver background */
+    --metal-grid: rgba(0, 50, 100, 0.08); /* Crisp subtle grid */
+    --metal-surface: #ffffff;
+    --metal-border: #cfd8dc;
+    --metal-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
 * { box-sizing: border-box; }
@@ -22,172 +30,280 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    font-family: var(--font-sans);
-    background-color: var(--bg-page);
+    font-family: var(--font-ui);
+    background-color: var(--bg-void);
     color: var(--text-primary);
     overflow: hidden;
     font-size: 14px;
 }
 
-/* --- 1. App Header --- */
+/* =========================================
+   1. HEADER (Holographic Dark)
+   ========================================= */
 .app-header {
     height: 50px;
     background: var(--bg-panel);
-    color: var(--text-primary);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-glass);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 16px;
-    border-bottom: 1px solid var(--border-color);
-    flex-shrink: 0;
+    padding: 0 20px;
+    z-index: 20;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
 }
-.brand { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-.room-controls { display: flex; gap: 8px; }
 
-/* --- 2. Ribbon Toolbar --- */
+.brand { 
+    font-family: var(--font-tech); 
+    font-size: 20px; 
+    font-weight: 700; 
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+    display: flex; align-items: center; gap: 10px;
+}
+.room-controls { display: flex; gap: 10px; }
+
+/* =========================================
+   2. RIBBON (Tech Control Panel)
+   ========================================= */
 .ribbon {
     height: 55px;
     background: var(--bg-panel);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-glass);
     display: flex;
     align-items: center;
     padding: 0 16px;
-    gap: 12px;
-    flex-shrink: 0;
+    gap: 15px;
+    z-index: 15;
+    position: relative;
 }
+
+/* Animated scanline under ribbon */
+.ribbon::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+    animation: borderScan 4s infinite linear;
+}
+
+@keyframes borderScan {
+    0% { background-position: -100% 0; }
+    100% { background-position: 200% 0; }
+}
+
 .tool-group { display: flex; gap: 8px; align-items: center; }
-.separator { width: 1px; height: 32px; background: var(--border-color); }
+.separator { width: 1px; height: 24px; background: var(--border-glass); opacity: 0.5; }
 
 .tool-btn {
-    background: var(--bg-panel);
-    border: 1px solid #ced4da;
-    padding: 6px 10px;
-    border-radius: 6px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border-glass);
+    padding: 6px 12px;
+    border-radius: 4px;
     cursor: pointer;
     font-size: 13px;
-    font-family: var(--font-sans);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: #495057;
-    transition: all 0.1s ease;
+    color: var(--text-muted);
+    transition: 0.2s;
 }
-.tool-btn:hover { background: var(--bg-hover); }
+.tool-btn:hover {
+    background: rgba(0, 243, 255, 0.1);
+    color: var(--neon-cyan);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+}
 .tool-btn.active {
-    background: var(--primary-light);
-    color: var(--primary);
-    border-color: var(--primary-border);
+    background: var(--neon-cyan);
+    color: #000;
+    font-weight: 600;
+    box-shadow: 0 0 15px var(--neon-cyan);
 }
-.tool-btn.text-red:hover { color: #dc3545; background: #fff5f5; }
-.tool-btn i { font-size: 12px; }
 
-.prop-item { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-secondary); }
+/* Inputs in dark mode */
 .prop-item input, .prop-item select {
-    border: 1px solid #ced4da;
-    padding: 4px 6px;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid var(--border-glass);
+    color: var(--neon-cyan);
+    padding: 4px 8px;
     border-radius: 4px;
-    font-size: 12px;
-    font-family: var(--font-sans);
-    background: #fff;
 }
-input[type="color"] { border: none; width: 28px; height: 28px; cursor: pointer; padding: 2px; }
-input[type="text"] { width: 80px; }
 
-/* --- 3. Main Workspace --- */
+/* =========================================
+   3. WORKSPACE LAYOUT
+   ========================================= */
 .workspace {
     display: flex;
     flex: 1;
     overflow: hidden;
 }
 
-/* --- 4. Sidebar --- */
+/* =========================================
+   4. SIDEBAR (Component Tray - Dark)
+   ========================================= */
 .sidebar {
-    width: 200px;
+    width: 220px;
     background: var(--bg-panel);
-    border-right: 1px solid var(--border-color);
-    padding: 12px;
+    border-right: 1px solid var(--border-glass);
+    padding: 15px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    overflow-y: auto;
+    gap: 10px;
+    z-index: 10;
+    box-shadow: 5px 0 20px rgba(0,0,0,0.3);
 }
-.sidebar-title { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); padding: 4px; }
+
+.sidebar-title { 
+    font-family: var(--font-tech);
+    font-size: 13px; 
+    font-weight: 600; 
+    color: var(--neon-cyan); 
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 5px;
+}
 
 .shape-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px;
+    padding: 10px;
+    background: rgba(255,255,255,0.03);
     border: 1px solid transparent;
     border-radius: 6px;
     cursor: grab;
-    transition: background 0.1s;
-    font-size: 13px;
+    display: flex; align-items: center; gap: 12px;
+    transition: 0.2s;
 }
-.shape-item:hover { background: var(--bg-hover); }
+.shape-item:hover {
+    background: rgba(0, 243, 255, 0.05);
+    border-color: var(--neon-cyan);
+    transform: translateX(5px);
+}
+.icon-box { 
+    border: 2px solid var(--text-muted); 
+    width: 24px; height: 18px; 
+}
+.shape-item:hover .icon-box { border-color: var(--neon-cyan); }
 
-.icon-box { width: 28px; height: 20px; border: 2px solid #343a40; }
-.icon-box.rect { background: #fff; }
-.icon-box.diamond { transform: rotate(45deg) scale(0.7); background: #fff; }
-.icon-box.oval { border-radius: 50%; background: #fff; }
-.icon-box.para { transform: skew(-20deg); background: #fff; }
-
-/* --- 5. Canvas --- */
+/* =========================================
+   5. CANVAS (Metallic Light Theme - High Visibility)
+   ========================================= */
 .canvas-wrapper {
     position: relative;
     flex: 1;
-    background-image: linear-gradient(var(--border-color) 1px, transparent 1px),
-                      linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
-    background-size: 20px 20px;
-    background-color: var(--bg-page);
-    overflow: auto;
+    
+    /* Metallic Silver Background */
+    background-color: var(--metal-bg);
+    
+    /* Precision Grid */
+    background-image: 
+        linear-gradient(var(--metal-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--metal-grid) 1px, transparent 1px);
+    background-size: 40px 40px;
+    
+    /* Animation: Slow Pan */
+    animation: panGrid 60s linear infinite;
+    
     display: flex;
-    padding: 40px;
+    padding: 50px;
+    overflow: hidden; /* Important for scanline */
 }
 
+@keyframes panGrid {
+    0% { background-position: 0 0; }
+    100% { background-position: -40px -40px; }
+}
+
+/* DYNAMIC: Laser Scanner Effect */
+.canvas-wrapper::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; 
+    width: 100%; height: 5px; /* Thin beam */
+    
+    /* Blue Laser Beam */
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0, 100, 255, 0.0) 20%,
+        rgba(0, 100, 255, 0.5) 50%, 
+        rgba(0, 100, 255, 0.0) 80%,
+        transparent 100%
+    );
+    box-shadow: 0 0 15px rgba(0, 100, 255, 0.3);
+    
+    animation: laserScan 6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes laserScan {
+    0% { top: -10%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 110%; opacity: 0; }
+}
+
+/* The Paper/Canvas Sheet */
 #flowchart-canvas {
-    background: var(--bg-canvas);
-    box-shadow: var(--shadow-md);
-    border: 1px solid var(--border-color);
+    background: var(--metal-surface);
+    /* Subtle Metallic Sheen Gradient */
+    background-image: linear-gradient(135deg, #ffffff 0%, #f4f7f9 100%);
+    
+    border: 1px solid var(--metal-border);
+    box-shadow: 
+        0 10px 40px rgba(0,0,0,0.15), /* Drop shadow */
+        0 0 0 1px white inset;        /* Highlight edge */
+        
+    transition: box-shadow 0.3s;
+    z-index: 2;
+}
+
+/* Hover effect on the canvas sheet itself */
+#flowchart-canvas:hover {
+    box-shadow: 
+        0 15px 50px rgba(0, 100, 255, 0.1),
+        0 0 0 1px var(--neon-cyan) inset; /* Tech border glow on hover */
+    border-color: var(--neon-cyan);
 }
 
 .canvas-wrapper[data-cursor] {
     cursor: var(--cursor, "default");
 }
 
-/* --- 6. Text Editor --- */
+/* =========================================
+   6. TEXT EDITOR
+   ========================================= */
 #node-text-editor {
     display: none;
     position: absolute;
-    border: 1px solid var(--primary);
-    box-shadow: 0 0 0 3px var(--primary-light);
-    box-sizing: border-box;
-    margin: 0;
-    padding: 4px;
+    background: white;
+    color: #333;
+    border: 2px solid var(--neon-blue);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    padding: 8px;
     font-family: inherit;
     font-size: inherit;
     text-align: center;
-    resize: none;
-    overflow: hidden;
-    z-index: 10;
-}
-#node-text-editor:focus {
+    border-radius: 4px;
+    z-index: 100;
     outline: none;
 }
 
+/* Buttons */
 .btn-secondary {
-    padding: 5px 15px;
-    background: var(--bg-hover);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
+    padding: 6px 15px;
+    background: transparent;
+    color: var(--neon-cyan);
+    border: 1px solid var(--neon-cyan);
     border-radius: 4px;
     cursor: pointer;
-    font-family: var(--font-sans);
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    font-family: var(--font-tech);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: 0.3s;
 }
 .btn-secondary:hover {
-    background: #e9ecef;
+    background: var(--neon-cyan);
+    color: #000;
+    box-shadow: 0 0 15px var(--neon-cyan);
 }
