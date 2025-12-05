@@ -6,9 +6,17 @@ require("dotenv").config();
 let googleAiClient;
 async function getGeminiClient() {
   if (googleAiClient) return googleAiClient;
+  
   const { GoogleGenAI } = await import("@google/genai");
-  // Use bracket notation for keys with hyphens
-  googleAiClient = new GoogleGenAI({ apiKey: process.env["CollabHub-Gemini-Key"] });
+  
+  const apiKey = process.env["CollabHub-Gemini-Key"];
+  
+  // 🔍 DEBUG CHECK: Fail fast if key is missing
+  if (!apiKey) {
+    throw new Error("❌ CRITICAL ERROR: API Key is missing. Check your Dashboard Environment Variables.");
+  }
+
+  googleAiClient = new GoogleGenAI({ apiKey: apiKey });
   return googleAiClient;
 }
 
