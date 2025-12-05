@@ -1,10 +1,16 @@
-// server/routes/chatRoutes.js
 const express = require("express");
 const router = express.Router();
 require("dotenv").config();
 
-// Dynamic import for node-fetch
-const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fetch(...args));
+// 1. Initialize Gemini Client lazily
+let googleAiClient;
+async function getGeminiClient() {
+  if (googleAiClient) return googleAiClient;
+  const { GoogleGenAI } = await import("@google/genai");
+  // Use bracket notation for keys with hyphens
+  googleAiClient = new GoogleGenAI({ apiKey: process.env["CollabHub-Gemini-Key"] });
+  return googleAiClient;
+}
 
 // Pass in io from main server
 let ioRef;
@@ -14,36 +20,28 @@ function setSocket(io) {
 
 router.post("/", async (req, res) => {
   const { message, room, userName } = req.body;
-  console.log("🪵 [Chat Debug]: Received message =>", message, "from", userName, "in room", room);
 
   try {
-    console.log("🪵 [Chat Debug]: Sending request to Groq API...");
+    // 2. Get the client instance
+    const ai = await getGeminiClient();
 
-    const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "llama-3.1-8b-instant", // Using a fast model
-        messages: [
-          { role: "system", content: "You are CollabAI, a helpful coding assistant." },
-          { role: "user", content: message },
-        ],
+    // 3. Call the Gemini API
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash", 
+      config: { 
+        systemInstruction: "You are CollabAI, a helpful coding assistant.",
         temperature: 0.7,
-      }),
+      },
+      contents: [
+        {
+          role: "user",
+          parts: [{ text: message }]
+        }
+      ],
     });
 
-    const data = await groqResponse.json();
-    console.log("🪵 [Chat Debug]: Raw Groq API response:", JSON.stringify(data, null, 2));
-
-    let aiReply = "I'm not sure about that.";
-    if (data?.choices?.[0]?.message?.content) {
-      aiReply = data.choices[0].message.content;
-    }
-
-    console.log(`🪵 [Chat Debug]: Emitting AI reply to room ${room || "unknown"} =>`, aiReply);
+    // 4. Extract text
+    const aiReply = response.text || "I'm not sure about that.";
 
     // ✅ Emit to all users in the room via Socket.IO
     if (ioRef && room) {
@@ -53,13 +51,13 @@ router.post("/", async (req, res) => {
       });
     }
 
-    // Respond to the original fetch request to stop the "typing" indicator
     res.json({ reply: aiReply }); 
+
   } catch (error) {
-    console.error("❌ [Chat Debug]: Error while calling Groq API:", error);
+    // Keep this one error log so you know if the API Key fails, otherwise the server fails silently.
+    console.error("Server Error:", error.message);
     res.status(500).json({ reply: "AI failed to respond." });
   }
 });
 
-// ✅ FIX: Export both the router and the setSocket function
 module.exports = { router, setSocket };

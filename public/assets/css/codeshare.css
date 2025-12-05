@@ -1,84 +1,242 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root {
+  --neon-green: #0aff0a;
+  --neon-cyan: #00f3ff;
+  --dark-bg: #050505;
+  --terminal-bg: rgba(10, 15, 20, 0.85);
+  --border-glow: rgba(0, 243, 255, 0.3);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-  background: linear-gradient(135deg, #1e1e2f, #2c2c3f);
-  color: #f0f0f0;
+  background-color: var(--dark-bg);
+  color: #e0e0e0;
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 50px 0;
+  align-items: center; /* Centered vertically */
+  font-family: 'JetBrains Mono', monospace; /* Coding font */
+  overflow: hidden; /* Keep the animation contained */
+  position: relative;
 }
 
+/* =========================================
+   💻 DIGITAL RAIN BACKGROUND (Pure CSS)
+   ========================================= */
+
+/* Layer 1: Vertical Data Columns */
+body::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -2;
+  
+  /* Creates vertical lines that look like columns of code */
+  background: 
+    linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 100%, 100% 20px;
+}
+
+/* Layer 2: The "Falling Code" Animation */
+body::after {
+  content: "";
+  position: absolute;
+  top: -100%; left: 0; width: 100%; height: 200%;
+  z-index: -1;
+  
+  /* This gradient simulates lines of text of varying lengths */
+  background-image: 
+    linear-gradient(transparent 50%, rgba(0, 243, 255, 0.05) 50%),
+    linear-gradient(90deg, rgba(0, 255, 0, 0.05), rgba(0, 255, 0, 0.05));
+    
+  background-size: 100% 4px, 60px 100%;
+  animation: dataStream 5s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes dataStream {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(50%); }
+}
+
+/* =========================================
+   🔲 MAIN CONTAINER (The HUD)
+   ========================================= */
 .container {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  padding: 30px;
   width: 90%;
-  max-width: 800px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  max-width: 900px;
+  background: var(--terminal-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  
+  /* Techy Border */
+  border: 1px solid var(--border-glow);
+  border-top: 2px solid var(--neon-cyan);
+  border-bottom: 2px solid var(--neon-green);
+  border-radius: 8px;
+  
+  padding: 40px;
+  box-shadow: 
+    0 0 30px rgba(0, 0, 0, 0.8),
+    inset 0 0 20px rgba(0, 243, 255, 0.05);
+    
+  position: relative;
+  z-index: 10;
 }
 
+/* "Corner Brackets" for extra tech feel */
+.container::before {
+  content: "";
+  position: absolute;
+  top: -2px; left: -2px;
+  width: 20px; height: 20px;
+  border-top: 2px solid var(--neon-cyan);
+  border-left: 2px solid var(--neon-cyan);
+}
+.container::after {
+  content: "";
+  position: absolute;
+  bottom: -2px; right: -2px;
+  width: 20px; height: 20px;
+  border-bottom: 2px solid var(--neon-green);
+  border-right: 2px solid var(--neon-green);
+}
+
+/* =========================================
+   TYPOGRAPHY
+   ========================================= */
 h1 {
   text-align: center;
-  margin-bottom: 20px;
-  color: #ffffff;
-  text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  margin-bottom: 25px;
+  font-family: 'Fira Code', monospace;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  
+  /* Neon Text Effect */
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
 }
 
+/* Blinking Cursor after title */
+h1::after {
+  content: "_";
+  animation: blink 1s step-end infinite;
+  color: var(--neon-green);
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+
+/* =========================================
+   📝 TEXTAREA (The Code Editor)
+   ========================================= */
 textarea {
   width: 100%;
-  border-radius: 8px;
-  border: none;
-  padding: 12px;
-  margin: 10px 0;
-  font-family: monospace;
+  min-height: 400px; /* Taller by default */
+  
+  background: rgba(0, 0, 0, 0.6);
+  color: #d4d4d4; /* VS Code default text color */
+  font-family: 'Fira Code', 'Consolas', monospace;
   font-size: 14px;
-  background: rgba(255,255,255,0.05);
-  color: #f0f0f0;
+  line-height: 1.6;
+  
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 3px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 20px;
+  margin: 15px 0;
+  
   outline: none;
   resize: vertical;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
+  
+  /* Subtle inner shadow */
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
 }
 
 textarea:focus {
-  background: rgba(255,255,255,0.15);
+  background: rgba(0, 0, 0, 0.8);
+  border-color: var(--neon-cyan);
+  border-left-color: var(--neon-cyan);
+  box-shadow: 
+    inset 0 0 15px rgba(0,0,0,0.8),
+    0 0 15px rgba(0, 243, 255, 0.1);
+  color: #fff;
 }
 
+/* =========================================
+   🎛️ BUTTONS (Cyberpunk Style)
+   ========================================= */
 button {
-  padding: 10px 25px;
-  border: none;
-  border-radius: 8px;
-  background: #6c63ff;
-  color: white;
-  cursor: pointer;
+  padding: 12px 30px;
+  border: 1px solid var(--neon-green);
+  background: rgba(10, 255, 10, 0.05);
+  color: var(--neon-green);
+  
+  font-family: 'JetBrains Mono', monospace;
   font-size: 14px;
-  transition: background 0.3s, transform 0.2s;
-  margin-right: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
+  margin-right: 15px;
+  position: relative;
+  overflow: hidden;
 }
 
+/* Button Hover - Glitch Fill */
 button:hover {
-  background: #5752d1;
-  transform: scale(1.05);
+  background: var(--neon-green);
+  color: #000;
+  box-shadow: 0 0 20px rgba(10, 255, 10, 0.4);
+  transform: translateY(-2px);
 }
 
+/* Secondary Button Style (if you have one, e.g. Clear) */
+button:nth-child(2) {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  background: rgba(0, 243, 255, 0.05);
+}
+
+button:nth-child(2):hover {
+  background: var(--neon-cyan);
+  color: #000;
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
 @media (max-width: 600px) {
   .container {
     padding: 20px;
+    width: 95%;
   }
 
   textarea {
-    font-size: 13px;
+    font-size: 12px;
+    min-height: 300px;
   }
 
   button {
     width: 100%;
-    margin-top: 5px;
+    margin-top: 10px;
+    margin-right: 0;
   }
 }

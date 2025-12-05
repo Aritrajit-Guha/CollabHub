@@ -1,119 +1,278 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&family=Orbitron:wght@400;700&display=swap');
+
+:root {
+  --neon-cyan: #00f3ff;
+  --neon-magenta: #bc13fe;
+  --neon-orange: #ff9d00;
+  --neon-lime: #39ff14;
+  --neon-red: #ff0055;
+  --void-bg: #020205;
+  --glass-border: rgba(255, 255, 255, 0.08);
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
 }
 
 body {
   height: 100vh;
-  background: url("../images/background.jpg") no-repeat center center/cover;
+  background-color: var(--void-bg);
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
   position: relative;
   overflow: hidden;
+  font-family: 'Rajdhani', sans-serif;
+
+  /* 1. Static Background Stars */
+  background-image: 
+    radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+    radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
+    radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
+  background-size: 550px 550px, 350px 350px, 250px 250px;
+  background-position: 0 0, 40px 60px, 130px 270px;
+  
+  /* REMOVED the random globalFlash animation here */
 }
 
+/* =========================================
+   🌌 2. NEBULAS (Background)
+   ========================================= */
+body::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -3;
+  
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(121, 40, 202, 0.2), transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 243, 255, 0.15), transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(255, 0, 85, 0.05), transparent 60%);
+    
+  background-size: 120% 120%;
+  animation: universeBreathing 15s ease-in-out infinite alternate;
+}
+
+@keyframes universeBreathing {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.1); opacity: 0.9; }
+}
+
+/* =========================================
+   🚀 3. REALISTIC SPACE SHUTTLES (FLIPPED 180°)
+   ========================================= */
+body::after {
+  content: "";
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  z-index: -2;
+  pointer-events: none;
+
+  /* ROTATION UPDATE:
+     Previous angle: 135deg (pointing Bottom-Right)
+     New angle (+180deg): 315deg (pointing Top-Left)
+     They will now fall backwards.
+  */
+  transform: rotate(315deg);
+
+  /* Realistic Shuttle SVGs */
+  background-image: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23ffffff' d='M256 16C160 16 144 144 144 144v224h-32l-32 64h96v64h16v-64h128v64h16v-64h96l-32-64h-32V144s-16-128-112-128z'/%3E%3Cpath fill='%2300f3ff' d='M256 64c-32 0-48 32-48 32v64c0 16 16 32 48 32s48-16 48-32V96s-16-32-48-32z'/%3E%3Cpath fill='%23333' d='M256 448h-64v-64h64v64zm0-320c-16 0-32 16-32 32s16 32 32 32 32-16 32-32-16-32-32-32z'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23cccccc' d='M256 16C160 16 144 144 144 144v224h-32l-32 64h96v64h16v-64h128v64h16v-64h96l-32-64h-32V144s-16-128-112-128z'/%3E%3Cpath fill='%23ff0055' d='M256 64c-32 0-48 32-48 32v64c0 16 16 32 48 32s48-16 48-32V96s-16-32-48-32z'/%3E%3C/svg%3E");
+
+  background-repeat: no-repeat;
+  background-size: 60px 60px, 50px 50px;
+  
+  /* Initial positions relative to rotated container */
+  background-position: 20% 150%, 70% 250%;
+  
+  animation: rocketTraffic 10s linear infinite;
+}
+
+@keyframes rocketTraffic {
+  0% {
+    /* Start at bottom (which is top visually due to rotation) */
+    background-position: 20% 150%, 70% 250%;
+    opacity: 0;
+  }
+  10% { opacity: 1; }
+  100% {
+    /* End at top (which is bottom visually) */
+    background-position: 20% -150px, 70% -250px;
+    opacity: 0;
+  }
+}
+
+/* =========================================
+   🌠 4. INTENSE METEOR SHOWER
+   ========================================= */
 .overlay {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(1px);
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: transparent;
+  z-index: -1;
+  pointer-events: none;
+  transform: rotate(-45deg);
 }
 
+.overlay::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+
+  /* Updated gradients for an intensely bright, glowing look.
+     Added white tips to simulate hot entry. */
+  background-image: 
+    /* Bright White */
+    linear-gradient(to bottom, transparent 0%, white 70%, white 100%),
+    /* Neon Cyan Glow */
+    linear-gradient(to bottom, transparent 0%, var(--neon-cyan) 50%, white 100%),
+    /* Neon Pink Glow */
+    linear-gradient(to bottom, transparent 0%, var(--neon-red) 50%, white 100%),
+    /* Neon Lime Glow */
+    linear-gradient(to bottom, transparent 0%, var(--neon-lime) 50%, white 100%),
+    /* Neon Orange Glow */
+    linear-gradient(to bottom, transparent 0%, var(--neon-orange) 50%, white 100%);
+    
+  /* Thicker and brighter */
+  background-size: 3px 200px, 4px 300px, 3px 250px, 4px 150px, 3px 350px;
+  background-repeat: no-repeat;
+
+  animation: meteorRain 3s linear infinite;
+}
+
+@keyframes meteorRain {
+  0% {
+    opacity: 0;
+    background-position: 10% -400px, 30% -400px, 50% -400px, 70% -400px, 90% -400px;
+  }
+  10% { opacity: 1; }
+  100% {
+    opacity: 0;
+    background-position: 10% 150%, 30% 150%, 50% 150%, 70% 150%, 90% 150%;
+  }
+}
+
+/* =========================================
+   ✨ 5. TWINKLING STARS
+   ========================================= */
+.overlay::before {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 2px; height: 2px;
+  border-radius: 50%;
+  box-shadow: 
+    -40vw -30vh 0 1px white, 30vw -20vh 0 0 white, -20vw 30vh 0 1px white,
+    40vw 10vh 0 0 white, -10vw -40vh 0 1px white, 20vw 40vh 0 0 white;
+  animation: starTwinkle 2s ease-in-out infinite alternate;
+}
+
+@keyframes starTwinkle {
+  0% { opacity: 0.3; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1.5); box-shadow: -40vw -30vh 0 2px white, ...; }
+}
+
+/* =========================================
+   🛸 UI STYLING (Unchanged)
+   ========================================= */
 .container {
-  text-align: center;
-  z-index: 1;
+  width: 100%;
+  max-width: 1200px;
+  perspective: 1000px;
+  z-index: 10;
 }
 
 h1 {
-  font-size: 2.8rem;
-  letter-spacing: 1px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 4rem;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: white;
+  text-shadow: 0 0 20px var(--neon-cyan);
+  margin-bottom: 10px;
+  animation: pulseText 5s infinite;
+}
+
+@keyframes pulseText {
+  0%, 100% { text-shadow: 0 0 20px var(--neon-cyan); }
+  50% { text-shadow: 0 0 40px var(--neon-cyan), 0 0 10px white; }
 }
 
 .subtitle {
-  margin-top: 12px;
-  font-size: 1.2rem;
-  color: #dcdcdc;
-  margin-bottom: 40px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.4rem;
+  color: var(--neon-cyan);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 50px;
 }
 
 .glass-card {
-  width: 70vw;
+  width: 80%;
+  max-width: 1100px;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 25px;
-  padding: 60px 80px;
+  gap: 30px;
+  background: rgba(10, 10, 20, 0.5);
   backdrop-filter: blur(15px);
-  box-shadow: 0 8px 40px rgba(0,0,0,0.3);
-  justify-items: center;
-  margin: 0 auto;
-  transition: 0.3s;
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 0 40px rgba(0, 243, 255, 0.1);
+  clip-path: polygon(30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0 30px);
+  animation: floatHUD 8s ease-in-out infinite;
 }
 
+@keyframes floatHUD {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Category Items */
 .category {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: white;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex; flex-direction: column; align-items: center; 
+  padding: 40px 20px;
+  text-decoration: none; color: #ccc;
+  border-radius: 4px; border: 1px solid transparent;
+  transition: all 0.4s ease;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+  position: relative; overflow: hidden;
 }
 
 .category img {
-  width: 80px;
-  height: 80px;
-  margin-bottom: 12px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.08);
-  padding: 10px;
-  transition: 0.3s;
+  width: 100px; height: 100px; margin-bottom: 20px; padding: 20px;
+  border-radius: 50%; background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1); transition: 0.5s;
 }
 
 .category p {
-  font-size: 1rem;
+  font-family: 'Orbitron', sans-serif; font-size: 1.1rem; letter-spacing: 2px;
 }
 
 .category:hover {
-  transform: scale(1.1);
+  background: rgba(0, 243, 255, 0.05);
+  border-color: var(--neon-cyan);
+  transform: translateY(-5px);
+  box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
 }
-
 .category:hover img {
-  box-shadow: 0 0 20px 5px rgba(0, 255, 255, 0.4);
+  background: rgba(0, 243, 255, 0.1);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 30px var(--neon-cyan);
+  transform: scale(1.1) rotate(360deg);
 }
+.category:hover p { color: white; text-shadow: 0 0 10px var(--neon-cyan); }
 
-footer {
-  margin-top: 50px;
-  display: flex;
-  justify-content: center;
-  gap: 25px;
-}
+footer { margin-top: 60px; display: flex; justify-content: center; gap: 30px; }
+footer img { width: 30px; opacity: 0.5; filter: grayscale(100%); transition: 0.3s; }
+footer img:hover { opacity: 1; filter: grayscale(0%) drop-shadow(0 0 10px var(--neon-cyan)); transform: scale(1.2); }
 
-footer img {
-  width: 25px;
-  opacity: 0.8;
-  transition: 0.2s;
-}
-
-footer img:hover {
-  opacity: 1;
-  transform: scale(1.15);
-}
-
-/* Responsive for small screens */
-@media (max-width: 768px) {
-  .glass-card {
-    grid-template-columns: repeat(2, 1fr);
-    width: 90vw;
-    padding: 40px;
-  }
-
-  h1 {
-    font-size: 2rem;
-  }
+@media (max-width: 900px) { .glass-card { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { 
+  .glass-card { grid-template-columns: 1fr; padding: 30px; }
+  h1 { font-size: 2.5rem; } 
 }
