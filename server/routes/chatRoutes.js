@@ -9,7 +9,7 @@ async function getGeminiClient() {
   
   const { GoogleGenAI } = await import("@google/genai");
   
-  const apiKey = process.env["CollabHub-Gemini-Key"];
+  const apiKey = process.env.COLLABHUB_GEMINI_API_KEY;
   
   // 🔍 DEBUG CHECK: Fail fast if key is missing
   if (!apiKey) {
