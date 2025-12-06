@@ -132,9 +132,17 @@ cd CollabHub
 2️⃣ **Install Dependencies:**  
 ```bash
 npm install  
-```  
+```
+3️⃣ **Validate the dependencies**
+```bash
+npm audit
+```
+If any errors found, run this command
+```bash
+npm audit fix
+```
 
-3️⃣ **Set Up Environment Variables:**  
+4️⃣ **Set Up Environment Variables:**  
 Create a `.env` file and add your Gemini API Key:  
 ```env  
 MONGO_URI=your_mongodb_connection
@@ -142,13 +150,18 @@ GEMINI_API_KEY=your_google_gemini_key
 PORT=5000  
 ```  
 
-4️⃣ **Start Backend Server:**  
+5️⃣ **Start Backend Server:**  
 **Backend:**
+For Production
 ```bash  
 npm start
-```  
+```
+For Developmeny
+```bash
+npm run dev
+```
 
-5️⃣**Frontend:**  
+6️⃣**Frontend:**  
 No build tools required — simply open:
 ```pysql
 /public/index.html
