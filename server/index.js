@@ -46,8 +46,15 @@ const injectBackendUrl = (htmlPath) => {
     ? (process.env.REACT_APP_BACKEND_URL_PRODUCTION || process.env.REACT_APP_BACKEND_URL)
     : (process.env.REACT_APP_BACKEND_URL || "http://localhost:5000");
   
+  console.log("🔍 Debug Info:", {
+    NODE_ENV: process.env.NODE_ENV,
+    REACT_APP_BACKEND_URL: process.env.REACT_APP_BACKEND_URL,
+    REACT_APP_BACKEND_URL_PRODUCTION: process.env.REACT_APP_BACKEND_URL_PRODUCTION,
+    finalBackendUrl: backendUrl
+  });
+  
   let html = require("fs").readFileSync(htmlPath, "utf8");
-  const scriptInjection = `<script>window.BACKEND_URL = "${backendUrl}";</script>`;
+  const scriptInjection = `<script>window.BACKEND_URL = "${backendUrl}"; console.log("Backend URL injected:", window.BACKEND_URL);</script>`;
   return html.replace("</head>", scriptInjection + "</head>");
 };
 
