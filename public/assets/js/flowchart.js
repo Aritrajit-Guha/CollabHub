@@ -2,14 +2,8 @@
 
 // --- 1. SETUP & STATE ---
 
-// ✅ FIX: Define your server's address
-// This tells Socket.IO where to connect, which is required for Render
-const API_BASE =
-  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? "http://localhost:5000" // Your local backend
-    : "https://collabhub-13ad.onrender.com"; // Your deployed Render backend URL
-
-const socket = io(API_BASE); // ✅ Pass the URL to io()
+// ✅ Use API_BASE from config.js (loaded globally as window.API_BASE)
+const socket = io(window.API_BASE); // ✅ Pass the URL to io()
 
 const canvas = document.getElementById("flowchart-canvas");
 const ctx = canvas.getContext("2d");

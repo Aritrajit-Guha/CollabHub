@@ -6,11 +6,8 @@ const generatedCodeId = document.getElementById("generatedCodeId");
 let mode = null;
 let codeId = null;
 
-// ✅ Detect backend URL based on environment
-const socketServerURL =
-  window.location.hostname === "localhost"
-    ? "http://localhost:5000"
-    : "https://collabhub-13ad.onrender.com/"; // change to your actual Render backend URL
+// ✅ Use API_BASE from config.js (loaded globally as window.API_BASE)
+const socketServerURL = window.API_BASE;
 
 // Connect to Socket.IO server
 const socket = io(socketServerURL, {

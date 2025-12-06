@@ -1,12 +1,7 @@
-// ======================
 // CONFIG
 // ======================
-const API_BASE =
-  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? "http://localhost:5000"
-    : "https://collabhub-13ad.onrender.com";
-
-const socket = io(API_BASE);
+// Use API_BASE from config.js (already loaded globally as window.API_BASE)
+const socket = io(window.API_BASE);
 
 const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
