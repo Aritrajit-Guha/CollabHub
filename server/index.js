@@ -21,12 +21,12 @@ const app = express();
 const server = http.createServer(app);
 connectDB();
 
-// ✅ FIX: Define allowedOrigins before it's used
+// ✅ FIX: Define allowedOrigins from environment variables
 const allowedOrigins = [
-  "http://localhost:5000",
-  "http://127.0.0.1:5500",
-  "http://localhost:5500",
-  "https://collabhub-in.vercel.app", // Your production URL
+  process.env.FRONTEND_URL_LOCAL_1,
+  process.env.FRONTEND_URL_LOCAL_2,
+  process.env.FRONTEND_URL_LOCAL_3,
+  process.env.FRONTEND_URL_PRODUCTION,
 ];
 
 // --- Middleware ---
@@ -38,12 +38,30 @@ app.use(
   })
 );
 app.use(bodyParser.json());
+
+// Helper function to inject backend URL into HTML
+const injectBackendUrl = (htmlPath) => {
+  // Use production backend URL if in production, otherwise use development URL
+  const backendUrl = process.env.NODE_ENV === "production" 
+    ? (process.env.REACT_APP_BACKEND_URL_PRODUCTION || process.env.REACT_APP_BACKEND_URL)
+    : (process.env.REACT_APP_BACKEND_URL || "http://localhost:5000");
+  
+  let html = require("fs").readFileSync(htmlPath, "utf8");
+  const scriptInjection = `<script>window.BACKEND_URL = "${backendUrl}";</script>`;
+  return html.replace("</head>", scriptInjection + "</head>");
+};
+
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, "../public"))); 
 
 // --- Root & Health Routes ---
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
+  res.send(injectBackendUrl(path.join(__dirname, "../public/index.html")));
+});
+
+app.get("/features/:feature", (req, res) => {
+  const featurePath = path.join(__dirname, "../public/features", req.params.feature + ".html");
+  res.send(injectBackendUrl(featurePath));
 });
 
 app.get("/health", (req, res) => res.json({ status: "OK", uptime: process.uptime() }));

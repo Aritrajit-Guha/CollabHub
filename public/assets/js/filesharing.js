@@ -1,10 +1,7 @@
 // ======================
 // Auto Backend Detection
 // ======================
-const API_BASE =
-  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? "http://localhost:5000" // Local backend
-    : "https://collabhub-13ad.onrender.com"; // Deployed backend URL
+// Use API_BASE from config.js (loaded globally as window.API_BASE)
 
 // ======================
 // DOM Elements
@@ -50,7 +47,7 @@ uploadBtn.addEventListener("click", async () => {
   uploadStatus.textContent = "Uploading...";
 
   try {
-    const res = await fetch(`${API_BASE}/api/fileshare/upload`, {
+    const res = await fetch(`${window.API_BASE}/api/fileshare/upload`, {
       method: "POST",
       body: formData,
     });
@@ -78,7 +75,7 @@ fetchBtn.addEventListener("click", async () => {
   fileLinks.innerHTML = "Fetching...";
 
   try {
-    const res = await fetch(`${API_BASE}/api/fileshare/${code}`);
+    const res = await fetch(`${window.API_BASE}/api/fileshare/${code}`);
     const data = await res.json();
 
     if (!data.success) {
@@ -89,7 +86,7 @@ fetchBtn.addEventListener("click", async () => {
     fileLinks.innerHTML = "";
     data.files.forEach(file => {
       const a = document.createElement("a");
-      a.href = `${API_BASE}${file.downloadUrl}`;
+      a.href = `${window.API_BASE}${file.downloadUrl}`;
       a.textContent = file.filename;
       a.download = file.filename;
       fileLinks.appendChild(a);

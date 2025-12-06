@@ -1,9 +1,6 @@
 // whiteboard.js
-const socket = io(
-  window.location.hostname === "localhost"
-    ? "http://localhost:5000"
-    : "https://collabhub-13ad.onrender.com"
-);
+// Load backend URL from config.js (window.API_BASE)
+const socket = io(window.API_BASE);
 
 
 // Canvas setup
