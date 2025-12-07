@@ -2,38 +2,47 @@ const express = require("express");
 const router = express.Router();
 require("dotenv").config();
 
-// 1. Initialize Gemini Client lazily
-let googleAiClient;
+// --- 1. CONFIGURATION & STATE ---
+let googleAiClient; // Holds the initialized client
+let ioRef; // Holds the Socket.IO instance
+
+/**
+ * Initializes the Gemini Client lazily.
+ * This ensures the server starts even if the API key is temporarily missing.
+ */
 async function getGeminiClient() {
   if (googleAiClient) return googleAiClient;
   
+  // Dynamic import for the new SDK
   const { GoogleGenAI } = await import("@google/genai");
   
   const apiKey = process.env.COLLABHUB_GEMINI_API_KEY;
   
-  // 🔍 DEBUG CHECK: Fail fast if key is missing
+  // Fail fast if key is missing when we actually try to use it
   if (!apiKey) {
-    throw new Error("❌ CRITICAL ERROR: API Key is missing. Check your Dashboard Environment Variables.");
+    throw new Error("MISSING_API_KEY");
   }
 
   googleAiClient = new GoogleGenAI({ apiKey: apiKey });
   return googleAiClient;
 }
 
-// Pass in io from main server
-let ioRef;
+/**
+ * Setter to pass the Socket.IO instance from server.js
+ */
 function setSocket(io) {
   ioRef = io;
 }
 
+// --- 2. MAIN ROUTE HANDLER ---
 router.post("/", async (req, res) => {
   const { message, room, userName } = req.body;
 
   try {
-    // 2. Get the client instance
+    // A. Initialize Client
     const ai = await getGeminiClient();
 
-    // 3. Call the Gemini API
+    // B. Call Gemini API
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash", 
       config: { 
@@ -48,10 +57,10 @@ router.post("/", async (req, res) => {
       ],
     });
 
-    // 4. Extract text
+    // C. Extract Response
     const aiReply = response.text || "I'm not sure about that.";
 
-    // ✅ Emit to all users in the room via Socket.IO
+    // D. Success: Emit to Room
     if (ioRef && room) {
       ioRef.to(room).emit("newMessage", {
         user: "CollabAI 🤖",
@@ -59,12 +68,64 @@ router.post("/", async (req, res) => {
       });
     }
 
+    // E. Success: Response to HTTP Client
     res.json({ reply: aiReply }); 
 
   } catch (error) {
-    // Keep this one error log so you know if the API Key fails, otherwise the server fails silently.
-    console.error("Server Error:", error.message);
-    res.status(500).json({ reply: "AI failed to respond." });
+    // --- 3. ROBUST ERROR HANDLING ---
+
+    // Default generic error (Safe for user)
+    let userFriendlyError = "❌ Service Unavailable: The AI is having trouble connecting.";
+    let statusCode = 500;
+
+    // Convert error to string for inspection
+    const errorDetails = JSON.stringify(error) || error.message || "";
+
+    // -- Scenario A: Rate Limits (429) --
+    if (error.status === 429 || error.code === 429) {
+      statusCode = 429;
+      if (errorDetails.includes("GenerateRequestsPerDay")) {
+        userFriendlyError = "⚠️ Daily Limit Reached: The AI has hit its maximum usage for today. Resets at midnight (PT).";
+      } else {
+        userFriendlyError = "⏳ High Traffic: Please wait 30-60 seconds before sending another message.";
+      }
+    } 
+    
+    // -- Scenario B: Missing API Key (Custom Error from step A) --
+    else if (error.message === "MISSING_API_KEY") {
+        console.error("🚨 CONFIG ERROR: COLLABHUB_GEMINI_API_KEY is missing in .env");
+        userFriendlyError = "⚙️ System Error: AI service is not configured correctly.";
+    }
+
+    // -- Scenario C: Auth / Permission Issues --
+    else if (error.status === 401 || error.status === 403) {
+      console.error("🚨 AUTH ERROR: Invalid API Key or Permissions.");
+      userFriendlyError = "⚙️ System Error: Invalid AI credentials.";
+    }
+    
+    // -- Scenario D: Safety/Blocked Content --
+    else if (error.status === 400 && errorDetails.includes("SAFETY")) {
+        statusCode = 400;
+        userFriendlyError = "🛡️ Safety Alert: The AI could not respond to that specific prompt.";
+    }
+
+    // Log the actual raw error for developer debugging
+    if (statusCode === 500) {
+        console.error("🔥 INTERNAL SERVER ERROR:", error);
+    } else {
+        console.log(`ℹ️ Handled AI Error (${statusCode}):`, userFriendlyError);
+    }
+
+    // Emit the System Alert to the chat room
+    if (ioRef && room) {
+      ioRef.to(room).emit("newMessage", {
+        user: "System ⚠️", 
+        message: userFriendlyError,
+      });
+    }
+
+    // Return the error state to the client
+    res.status(statusCode).json({ reply: userFriendlyError });
   }
 });
 
