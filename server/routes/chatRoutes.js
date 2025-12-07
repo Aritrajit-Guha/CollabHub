@@ -44,7 +44,7 @@ router.post("/", async (req, res) => {
 
     // B. Call Gemini API
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash", 
+      model: "gemini-2.5-flash", 
       config: { 
         systemInstruction: "You are CollabAI, a helpful coding assistant.",
         temperature: 0.7,
