@@ -1,0 +1,13 @@
+#root {
+  min-height: 100vh;
+}
+
+.page-status {
+  margin: 1rem auto;
+  max-width: 900px;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 0.5rem;
+  color: #f4f4f4;
+  background: rgba(0, 0, 0, 0.25);
+}

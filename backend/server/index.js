@@ -2,7 +2,6 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const path = require("path");
 const http = require("http");
 const { Server } = require("socket.io");
 const cron = require("node-cron");
@@ -21,30 +20,35 @@ const app = express();
 const server = http.createServer(app);
 connectDB();
 
-// ✅ FIX: Define allowedOrigins before it's used
+const configuredFrontendOrigins = (process.env.FRONTEND_ORIGIN || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+// The React app runs on Vite's default port locally and is deployed separately.
 const allowedOrigins = [
   "http://localhost:5000",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
   "http://127.0.0.1:5500",
   "http://localhost:5500",
   "https://collabhub-in.vercel.app", // Your production URL
+  ...configuredFrontendOrigins,
 ];
 
 // --- Middleware ---
 app.use(
   cors({
-    origin: allowedOrigins,
-    methods: ["GET", "POST"],
+    origin: [...new Set(allowedOrigins)],
+    methods: ["GET", "POST", "OPTIONS"],
     credentials: true,
   })
 );
 app.use(bodyParser.json());
-// Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, "../public"))); 
 
-// --- Root & Health Routes ---
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
-});
+// The React frontend is deployed separately. Keep this endpoint useful for
+// quick API checks without serving the retired static frontend.
+app.get("/", (req, res) => res.json({ name: "CollabHub API", status: "OK" }));
 
 app.get("/health", (req, res) => res.json({ status: "OK", uptime: process.uptime() }));
 
@@ -54,7 +58,7 @@ app.use("/api/chat", chatRouter); // Use the imported chatRouter
 
 // --- Socket.io Setup ---
 const io = new Server(server, {
-  cors: { origin: allowedOrigins, methods: ["GET", "POST"] },
+  cors: { origin: [...new Set(allowedOrigins)], methods: ["GET", "POST"] },
 });
 
 // Pass 'io' to the handlers that need it
