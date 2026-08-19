@@ -2,10 +2,15 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const path = require("path");
 const http = require("http");
 const { Server } = require("socket.io");
 const cron = require("node-cron");
-require("dotenv").config();
+const dotenv = require("dotenv");
+
+// Local development reads backend/.env. Render/Vercel-style deployments use
+// the environment variables configured by the hosting platform.
+dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
 // --- Database & Route Imports ---
 const connectDB = require("../database/db");
@@ -77,7 +82,8 @@ cron.schedule("0 * * * *", async () => {
 
 // --- Start Server ---
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
+const HOST = process.env.HOST || "0.0.0.0";
+server.listen(PORT, HOST, () => {
   console.log(`✅ Server running on port ${PORT}`);
-  console.log(`🌐 Open at: http://localhost:${PORT}/`);
+  console.log(`🌐 Listening on ${HOST}:${PORT}`);
 });

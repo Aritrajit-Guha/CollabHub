@@ -9,7 +9,7 @@ The repository now contains two independent applications:
 
 ## Local development
 
-Create `backend/.env` from `backend/.env.example` and add the MongoDB and Gemini values. Then run the applications in separate terminals:
+Create `.env` in both `backend` and `frontend` from their `.env.example` files, then add the local values for VS Code development. In Vercel and Render, enter the production values directly in the platform environment-variable settings. Then run the applications in separate terminals:
 
 ```bash
 cd backend
@@ -29,7 +29,7 @@ The React application runs at `http://localhost:5173` and calls the backend at t
 VITE_API_URL=http://localhost:5000
 ```
 
-For a deployed frontend, set `VITE_API_URL` to the deployed backend URL. For the backend, set `FRONTEND_ORIGIN` to a comma-separated list containing the local and deployed frontend origins.
+For Vercel, set `VITE_API_URL=https://collabhub-13ad.onrender.com`. For Render, set `MONGO_URI`, `COLLABHUB_GEMINI_API_KEY`, and `FRONTEND_ORIGIN=https://collabhub-in.vercel.app` in the service environment settings. The deployment platforms provide their runtime environment variables directly; no separate production env file is required.
 
 ## Routes
 

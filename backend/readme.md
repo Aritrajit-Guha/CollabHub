@@ -16,7 +16,7 @@ The server listens on `PORT` (5000 by default), exposes `/health`, and provides 
 Set `FRONTEND_ORIGIN` to a comma-separated list of allowed React application origins, for example:
 
 ```env
-FRONTEND_ORIGIN=http://localhost:5173,https://your-frontend-domain
+FRONTEND_ORIGIN=http://localhost:5173,https://collabhub-in.vercel.app
 ```
 
-Keep Gemini and MongoDB credentials in `.env`; do not expose them through the Vite frontend.
+For a deployed backend, set `MONGO_URI`, `COLLABHUB_GEMINI_API_KEY`, and `FRONTEND_ORIGIN=https://collabhub-in.vercel.app` in the hosting provider. Render supplies `PORT` automatically; do not copy the local `PORT=5000` setting into Render unless you intentionally configure a custom Render port. Do not expose MongoDB or Gemini credentials through the Vite frontend.
